@@ -6,9 +6,15 @@ from phonenumber_field.modelfields import PhoneNumberField
 from azbankgateways.models.enum import PaymentStatus
 
 class Token(models.Model):
+    STATUSES = (
+        ('validated', 'Validated'),
+        ('invalidated', 'Invalidated'),
+    )
+
     value = models.CharField(max_length=5)
     date_created = models.DateTimeField(auto_now_add=True)
     phone_number = PhoneNumberField()
+    status = models.CharField(choices=STATUSES, default='invalidated')
 
 
 class Subscription(models.Model):
