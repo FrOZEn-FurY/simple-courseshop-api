@@ -111,7 +111,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         now = timezone.datetime.now()
         expiration_date = obj.subscription_date_started.astimezone(pytz.timezone("Asia/Tehran")) + timedelta(days=obj.subscription.duration)
         difference = expiration_date - timezone.make_aware(now, pytz.timezone("Asia/Tehran"))
-        return difference
+        return difference.days
 
     def get_favorites(self, obj):
         urls = []
