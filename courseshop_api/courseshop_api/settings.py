@@ -2,6 +2,8 @@ from pathlib import Path
 
 from datetime import timedelta
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -153,16 +155,16 @@ PHONENUMBER_DEFAULT_REGION = "IR"
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-# CELERY_BEAT_SCHEDULE = {
-#     'subscription-cleanup': {
-#         'task': 'accounts.tasks.remove_subscriptions',
-#         'schedule': crontab(hour=13, minute=56),
-#     },
-#     'token-cleanup': {
-#         'task': 'accounts.tasks.remove_tokens',
-#         'schedule': crontab(hour=13, minute=56),
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    'subscription-cleanup': {
+        'task': 'accounts.tasks.remove_subscriptions',
+        'schedule': crontab(hour=0, minute=0),
+    },
+    'token-cleanup': {
+        'task': 'accounts.tasks.remove_tokens',
+        'schedule': crontab(hour=0, minute=0),
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
