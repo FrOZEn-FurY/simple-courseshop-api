@@ -1,5 +1,19 @@
 from django import forms
 
+from ckeditor.widgets import CKEditorWidget
+
+from .models import Post
+
+
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = '__all__'
+        widgets = {
+            'body': CKEditorWidget
+        }
+
 
 class PostDataAdminFormset(forms.models.BaseInlineFormSet):
     def clean(self) -> None:

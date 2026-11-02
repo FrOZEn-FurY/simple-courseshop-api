@@ -3,7 +3,7 @@ from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
 from .models import *
-from .forms import PostDataAdminFormset
+from .forms import PostDataAdminFormset, PostForm
 
 
 class PostDataInline(admin.StackedInline):
@@ -16,6 +16,8 @@ class PostAdmin(admin.ModelAdmin):
         ("Post", { "fields": ["title", "category", "subscription_required", "body"], "description": "The core data of a post." }),
     ]
     inlines = [PostDataInline]
+    form = PostForm
+
 
 admin.site.register(Category, MPTTModelAdmin)
 admin.site.register(PostData)

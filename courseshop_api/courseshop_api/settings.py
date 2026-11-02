@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import os
+
 from datetime import timedelta
 
 from celery.schedules import crontab
@@ -36,6 +38,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework',
     'rest_framework_simplejwt',
+    'ckeditor',
+    'ckeditor_uploader',
 
     "accounts.apps.AccountsConfig",
     "posts.apps.PostsConfig",
@@ -127,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    ]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -174,9 +182,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_THROTTLE_CLASSES': [
         'accounts.throttles.AuthenticationThrottle',
+        'accounts.throttles.BuySubscriptionThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
         'authentication': '10/min',
+        'subscription': '1/min',
     }
 }
 
@@ -224,4 +234,50 @@ SIMPLE_JWT = {
     "CHECK_REVOKE_TOKEN": True,
     "REVOKE_TOKEN_CLAIM": "hash_password",
     "CHECK_USER_IS_ACTIVE": True,
+}
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
+CKEDITOR_ALLOW_NONIMAGE_FILES = True
+CKEDITOR_BASEPATH = f"{STATIC_URL}ckeditor/ckeditor/"
+CKEDITOR_RESTRICT_BY_DATE = True
+CKEDITOR_THUMBNAIL_SIZE = (800, 600)
+CKEDITOR_IMAGE_QUALITY = 70
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+    'Comments': {
+        'toolbar': [
+            {
+                'name': 'Clipboard',
+                'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            },
+            {
+                'name': 'Editing',
+                'items': ['Find', 'Replace', '-', 'SelectAll']
+            },
+            {
+                'name': 'BasicStyles',
+                'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            },
+            {
+                'name': 'styles',
+                'items': ['Styles', 'Format', 'Font', 'FontSize']
+            },
+            {
+                'name': 'colors',
+                'items': ['TextColor', 'BGColor']
+            },
+            {
+                'name': 'paragraph',
+                'items': [
+                    'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                    'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                    'Language'
+                ]
+            },
+        ],
+    }
 }
