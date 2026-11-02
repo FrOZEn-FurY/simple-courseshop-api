@@ -63,3 +63,6 @@ class Comment(models.Model):
 class UserFavorite(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='favorited')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+
+    def get_absolute_url(self):
+        return reverse_lazy('post-detail', args=(self.post.category.slug, self.post.pk))

@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path("bankgateways/", az_bank_gateways_urls()),
+    path('', include('posts.urls')),
 ]
