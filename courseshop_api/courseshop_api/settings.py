@@ -171,7 +171,13 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'accounts.throttles.AuthenticationThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'authentication': '10/min',
+    }
 }
 
 SIMPLE_JWT = {

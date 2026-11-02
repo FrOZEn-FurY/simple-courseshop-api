@@ -1,5 +1,6 @@
 from rest_framework.views import APIView, Http404
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView, TokenRefreshView
 from rest_framework import status
 
 from .models import User, Subscription, TransactionHistory
@@ -12,7 +13,7 @@ from .serializers import (
     SignupSerializer,
     ChangePasswordSerializer
 )
-
+from .throttles import AuthenticationThrottle
 from utils.functions import get_response
 
 from azbankgateways import bankfactories, models as bank_models, default_settings as settings
@@ -22,7 +23,20 @@ from django.utils import timezone
 import pytz
 
 
+class ThrottledTokenObtainPairView(TokenObtainPairView):
+    throttle_classes = [AuthenticationThrottle]
+
+
+class ThrottledTokenRefreshView(TokenRefreshView):
+    throttle_classes = [AuthenticationThrottle]
+
+
+class ThrottledTokenVerifyView(TokenVerifyView):
+    throttle_classes = [AuthenticationThrottle]
+    
+
 class SendOTPView(APIView):
+    throttle_classes = [AuthenticationThrottle]
     serializer_class = PhoneSerializer
 
     def post(self, request, *args, **kwargs):
@@ -41,6 +55,7 @@ class SendOTPView(APIView):
 
 
 class VerifyOTPView(APIView):
+    throttle_classes = [AuthenticationThrottle]
     serializer_class = TokenSerializer
 
     def post(self, request, *args, **kwargs):
@@ -58,6 +73,7 @@ class VerifyOTPView(APIView):
 
 
 class SignupView(CreateAPIView):
+    throttle_classes = [AuthenticationThrottle]
     serializer_class = SignupSerializer
 
     def perform_create(self, serializer):
